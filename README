@@ -1,7 +1,7 @@
 Shuizhou Wang (sw3192)
 Chenqin Xu (cx2198)
 
-  The goal of this assignment is to provide you experience in developing and deploying a web application using AWS Cloud services. The web application would collect Twitts and do some processing and represent the Twitts on GoogleMaps. Following are the required steps:  
+  The goal of this project is to provide experience in developing and deploying a web application using AWS Cloud services. The web application would collect Twitts and do some processing and represent the Twitts on GoogleMaps. Following are the required steps:  
   
   1.Use Twitter Streaming API to fetch tweets from the twitter hose in real-time. Collect at least one week's worth of tweets. 
   
@@ -19,3 +19,12 @@ Chenqin Xu (cx2198)
   1.select keyword and click search button: twitters contain keywords will be marked on the twitter map.
   2.select marker(click with right click):show a infowindow on the web which contains the content,date and author of the twitter.
   3.click map(click with left click): show twitters around the clicked point.
+ 
+  How to run the web application:
+  1.configure AWS account keys with your own keys in config folder
+  2.In the terminal, cd to your local folder:
+  (1).export FLASK_APP=application.py
+
+  (2).flask run
+
+  (3).access to http://127.0.0.1:5000/
