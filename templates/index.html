@@ -1,0 +1,173 @@
+{% extends "layout.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TweetMap</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='bower_components/bootstrap/dist/css/bootstrap.min.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css') }}" />
+    <style type="text/css">
+        html, body { 
+        height: 100%;
+      }
+      #map { 
+        height: 100%; 
+      }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+
+            <div class="navbar-header">
+              <a class="navbar-brand" href="#">TweetMap</a>
+            </div>
+
+            <ul class="nav navbar-nav">
+                <li class="dropdown active">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Keyword<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">python</a></li>
+                            <li><a href="#">javascript</a></li>
+                            <li><a href="#">ruby</a></li>
+                            <li><a href="#">job</a></li>
+                            <li><a href="#">internship</a></li> <!--set five keywords -->
+                        </ul>
+                </li>
+            </ul>
+            </form>
+            <ul class="nav navbar-nav navbar-right">
+                <button type="button" id="submitBtn" class="btn btn-default navbar-btn">Search</button>
+                                              <!--set search button -->
+            </ul>
+        </div>
+    </nav> 
+
+    <script type="text/javascript" src="{{ url_for('static', filename='bower_components/jquery/dist/jquery.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='bower_components/moment/min/moment.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='bower_components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js') }}"></script>
+    <!--design tne web style using nav bar -->
+  <div id="map"></div>
+  <script>
+
+      
+     
+  // Create a <script> tag and set the USGS URL as the source. save keyword and pass it to the http. return twitters that contains keywords
+    var script = document.createElement('script');
+    $(function(){
+    $(".dropdown").on("click", "li a", function() {
+    keyword = $(this).text();
+    $(".dropdown-toggle").html(keyword + ' <span class="caret"></span>');
+}); 
+    $("#submitBtn").click(function() {
+         console.log(keyword)
+         $.ajax({
+            type: "GET",
+            url: $SCRIPT_ROOT + "/echo/",
+            contentType: "application/json; charset=utf-8",
+            data: { echovalue:keyword  },
+            success: function(response) {
+              MarkMap(response)
+            }
+        });     
+    });
+  });
+     // main function when accept each keyword twitter, marker the twitter on the map, show information in the infowindow and show the marker around the point clicked on the map.
+
+      function MarkMap(data) {
+         clearMaps();
+         for (var i = 0; i < data.length; i++) {
+          var coords = {lat:data.data[i].Cords[0], lng:data.data[i].Cords[1]}
+          addMarker(coords, data.data[i].ID)
+
+        }}
+
+      var map;
+       //initialize a map
+      function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 2,
+          center: new google.maps.LatLng(2.8,-187.3),
+          mapTypeId: 'terrain'
+        });}
+
+     var markersArray = [];
+      // clear all markers on the map
+      function clearMaps() {
+        for (var i = 0; i < markersArray.length; i++ ) {
+          markersArray[i].setMap(null);
+        }
+        markersArray.length = 0;
+      }
+
+      function addMarker(location, id) {
+        var point = {
+          url: "http://maps.google.com/mapfiles/kml/paddle/ylw-blank-lv.png",
+          size: new google.maps.Size(20,20)
+        };
+        // define marker style
+        var marker = new google.maps.Marker({
+          position: location,
+          map: map,
+          title: id,
+          icon: point
+        });
+        // store information in marker
+
+        marker.addListener('rightclick', function(){
+
+        // when clicking marker, it will send request to http with the clicked twitter id, and http will response twitter content, username and date to the html and show on the web page with a info window.
+          $.ajax({
+            type: "GET",
+            url: $SCRIPT_ROOT + "/getDetails/",
+            contentType: "application/json; charset=utf-8",
+            data: { idname:id  },
+            success: function(response) {
+              var infowindow = new google.maps.InfoWindow({
+              content: "<h1>"+response.name+"</h1><p>"+response.content+"</p><p>Date:"+response.date+"</p>" 
+          });
+              infowindow.open(map,marker)
+            }
+           });    
+        })
+
+
+        markersArray.push(marker);
+        storemarker=markersArray
+        // when clicking map, it will get the location of the clicked twitter and compare it with other marker in the map. we can show all the marker around the clicked point on the map.
+
+        google.maps.event.addDomListener(map,'click', function(event) {
+        basisla=event.latLng.lat()
+        basislo=event.latLng.lng() 
+        for (var j = 0; j < storemarker.length; j++)
+        {       
+        var a = basisla - storemarker[j].getPosition().lat()
+
+        var b = basislo - storemarker[j].getPosition().lng()
+        var L = Math.sqrt( a*a + b*b )
+        if(L>=10) {
+
+          storemarker[j].setMap(null);
+        }
+        }
+      })}
+      
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBDYRy_W0yV8WM552qME4RrmUBo5P9RgIY&callback=initMap">
+    </script>
+
+
+
+<script type=text/javascript>
+
+  
+<!---->
+</script>
+<strong>Enter a value to echo back:</strong>
+<input type='text' size='10' id='echoText' name='echoText'>
+<strong><div id='echoResult'></div></strong>
+{% endblock %}

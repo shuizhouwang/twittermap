@@ -1,0 +1,21 @@
+Shuizhou Wang (sw3192)
+Chenqin Xu (cx2198)
+
+  The goal of this assignment is to provide you experience in developing and deploying a web application using AWS Cloud services. The web application would collect Twitts and do some processing and represent the Twitts on GoogleMaps. Following are the required steps:  
+  
+  1.Use Twitter Streaming API to fetch tweets from the twitter hose in real-time. Collect at least one week's worth of tweets. 
+  
+  2.Use AWS  ElasticSearch to store the tweets on the back-end.
+  
+  3.Create a web UI that allows users to search for a few keywords (via a dropdown). The keywords (up to 10) can be of your choosing.
+  
+  4.Use Google Maps API  (or any other mapping library) to render these filtered tweets in the map in whatever manner you want.
+
+  5.Deploy your application on AWS Elastic Beanstalk  in an auto-scaling environment.
+
+  6.Use ElasticSearch’s  geospatial feature that shows tweets that are within a certain distance from the point the user clicks on the map. 
+
+  function on the web:
+  1.select keyword and click search button: twitters contain keywords will be marked on the twitter map.
+  2.select marker(click with right click):show a infowindow on the web which contains the content,date and author of the twitter.
+  3.click map(click with left click): show twitters around the clicked point.
