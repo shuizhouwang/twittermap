@@ -1,5 +1,6 @@
-Shuizhou Wang (sw3192)
-Chenqin Xu (cx2198)
+  project contributor:
+  Shuizhou Wang (sw3192)
+  Chenqin Xu (cx2198)
 
   The goal of this project is to provide experience in developing and deploying a web application using AWS Cloud services. The web application would collect Twitts and do some processing and represent the Twitts on GoogleMaps. Following are the required steps:  
   
